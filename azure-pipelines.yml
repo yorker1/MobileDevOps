@@ -10,8 +10,12 @@ pool:
   vmImage: 'macos-latest'
 
 variables:
-  buildConfiguration: 'Debug'
-  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+- name: buildConfiguration
+  value: 'Debug'
+- name: outputDirectory
+  value: '$(build.binariesDirectory)/$(buildConfiguration)'
+
+- group: Android-Key-Group
 
 steps:
 - task: NuGetToolInstaller@1
@@ -19,9 +23,12 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '**/*.sln'
+    restoreDirectory: $(build.sourcesDirectory)/packages'
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '**/*droid*.csproj'
+    projectFile: '**/*MobileDevOps.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
+    jdkOption: 'JDKVersion'
+
